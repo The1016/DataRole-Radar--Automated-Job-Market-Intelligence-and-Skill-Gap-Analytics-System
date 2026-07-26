@@ -1,0 +1,12 @@
+﻿source_job_id,job_title_raw,company_name,automated_role_family,correct_role_family,manual_decision,predicted_is_target,actual_is_target
+https://himalayas.app/companies/autodesk/jobs/business-analytics-manager,Business Analytics Manager,Autodesk,Analytics Manager,Analytics Engineer,Incorrect Role Family,True,True
+https://himalayas.app/companies/unisys/jobs/digital-intelligence-analyst,Digital Intelligence Analyst,Unisys,Non-target Role,BI Analyst,False Negative,False,True
+https://himalayas.app/companies/evergreen-nephrology/jobs/senior-analyst-reporting-analytics,"Senior Analyst, Reporting & Analytics",Evergreen Nephrology,Other Analytics,BI Analyst,Incorrect Role Family,True,True
+https://himalayas.app/companies/doordash/jobs/sr-business-intelligence-engineer-8085726481,Sr. Business Intelligence Engineer,Doordash,BI Developer,BI Analyst,False Negative,True,True
+https://himalayas.app/companies/logicalis-com/jobs/data-analyst-power-bi-fabric,Data Analyst (Power BI / Fabric),Logicalis Spain,Data Analyst,BI Developer,Incorrect Role Family,True,True
+https://himalayas.app/companies/foundever/jobs/business-insights-enablement-analyst-remote-any-location-gb-988341686,"Business Insights & Enablement Analyst (Remote, Any Location, GB)",Foundever,Non-target Role,Data Analyst,False Negative,False,True
+https://himalayas.app/companies/vistaprint/jobs/business-intelligence-manager-tunis-remote-tunis-tn-1053,"Business Intelligence Manager - Tunis, Remote (Tunis, TN, 1053)",Cimpress/Vista,Non-target Role,Data Analyst,False Negative,False,True
+https://himalayas.app/companies/relx/jobs/content-performance-analyst-2993675640,Content Performance Analyst,RELX,Non-target Role,Data Analyst,False Negative,False,True
+https://himalayas.app/companies/motive/jobs/senior-analyst-strategic-analytics-7955189282,"Senior Analyst, Strategic Analytics",Motive,Other Analytics,Data Analyst,Incorrect Role Family,True,True
+https://himalayas.app/companies/kobie-marketing/jobs/decision-science-analyst,Decision Science Analyst,Kobie Marketing,Decision Science,Data Engineer,False Negative,True,True
+https://himalayas.app/companies/bright-data/jobs/business-analyst-managed-services-insights-us-4823848973,Business Analyst - Managed Services & Insights (US),Bright Data,Business Analyst,Non-target Role,False Positive,True,False

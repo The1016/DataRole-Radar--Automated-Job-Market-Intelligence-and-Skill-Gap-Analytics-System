@@ -1,0 +1,2 @@
+﻿reviewed_records,exact_role_family_matches,exact_role_family_mismatches,role_family_accuracy,true_positive,false_positive,false_negative,true_negative,target_precision,target_recall,target_f1_score
+27,16,11,0.5925925925925926,22,1,4,0,0.9565217391304348,0.8461538461538461,0.8979591836734695
