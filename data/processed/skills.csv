@@ -1,0 +1,55 @@
+﻿skill_key,skill_name,skill_category
+sql,SQL,Querying
+python,Python,Programming
+r_programming,R,Programming
+excel,Excel,Spreadsheet
+power_bi,Power BI,BI & Visualization
+tableau,Tableau,BI & Visualization
+looker,Looker,BI & Visualization
+qlik,Qlik,BI & Visualization
+dax,DAX,BI & Visualization
+power_query,Power Query,BI & Visualization
+microsoft_fabric,Microsoft Fabric,BI & Visualization
+streamlit,Streamlit,BI & Visualization
+dashboarding,Dashboarding,BI & Visualization
+data_visualization,Data Visualization,BI & Visualization
+pandas,pandas,Python Library
+numpy,NumPy,Python Library
+scikit_learn,scikit-learn,Python Library
+dbt,dbt,Data Engineering
+etl_elt,ETL / ELT,Data Engineering
+airflow,Apache Airflow,Data Engineering
+spark,Apache Spark,Data Engineering
+databricks,Databricks,Data Engineering
+data_modeling,Data Modeling,Data Engineering
+data_warehousing,Data Warehousing,Data Engineering
+apis,APIs,Data Engineering
+ci_cd,CI/CD,Data Engineering
+docker,Docker,Data Engineering
+kubernetes,Kubernetes,Data Engineering
+terraform,Terraform,Data Engineering
+matillion,Matillion,Data Engineering
+snowflake,Snowflake,Data Platform
+bigquery,BigQuery,Data Platform
+redshift,Amazon Redshift,Data Platform
+postgresql,PostgreSQL,Database
+mysql,MySQL,Database
+sql_server,SQL Server,Database
+oracle,Oracle,Database
+aws,AWS,Cloud
+azure,Microsoft Azure,Cloud
+google_cloud,Google Cloud,Cloud
+statistics,Statistics,Analytics Method
+forecasting,Forecasting,Analytics Method
+ab_testing,A/B Testing,Analytics Method
+machine_learning,Machine Learning,Analytics Method
+data_governance,Data Governance,Data Management
+data_quality,Data Quality,Data Management
+git,Git,Developer Tool
+jira,Jira,Developer Tool
+sas,SAS,Analytics Tool
+alteryx,Alteryx,Analytics Tool
+stakeholder_management,Stakeholder Management,Business Skill
+communication,Communication,Business Skill
+problem_solving,Problem Solving,Business Skill
+business_acumen,Business Acumen,Business Skill

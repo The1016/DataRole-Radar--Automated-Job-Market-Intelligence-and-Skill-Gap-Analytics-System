@@ -1,0 +1,55 @@
+﻿skill_key,skill_name,skill_category,aliases
+sql,SQL,Querying,SQL|Structured Query Language|T-SQL|PL/SQL
+python,Python,Programming,Python
+r_programming,R,Programming,R programming|R language|RStudio
+excel,Excel,Spreadsheet,Excel|Microsoft Excel|MS Excel
+power_bi,Power BI,BI & Visualization,Power BI|PowerBI
+tableau,Tableau,BI & Visualization,Tableau
+looker,Looker,BI & Visualization,Looker|Looker Studio
+qlik,Qlik,BI & Visualization,Qlik|QlikView|Qlik Sense
+dax,DAX,BI & Visualization,DAX|Data Analysis Expressions
+power_query,Power Query,BI & Visualization,Power Query|M language
+microsoft_fabric,Microsoft Fabric,BI & Visualization,Microsoft Fabric|Fabric
+streamlit,Streamlit,BI & Visualization,Streamlit
+dashboarding,Dashboarding,BI & Visualization,dashboard|dashboards|dashboarding
+data_visualization,Data Visualization,BI & Visualization,data visualization|data visualisation|visualization|visualisation
+pandas,pandas,Python Library,pandas
+numpy,NumPy,Python Library,NumPy
+scikit_learn,scikit-learn,Python Library,scikit-learn|sklearn
+dbt,dbt,Data Engineering,dbt|data build tool
+etl_elt,ETL / ELT,Data Engineering,ETL|ELT|extract transform load|extract load transform
+airflow,Apache Airflow,Data Engineering,Airflow|Apache Airflow
+spark,Apache Spark,Data Engineering,Spark|Apache Spark|PySpark
+databricks,Databricks,Data Engineering,Databricks|Azure Databricks
+data_modeling,Data Modeling,Data Engineering,data modeling|data modelling|dimensional modeling|dimensional modelling|star schema|semantic model
+data_warehousing,Data Warehousing,Data Engineering,data warehouse|data warehouses|data warehousing|lakehouse
+apis,APIs,Data Engineering,API|APIs|REST API|RESTful API
+ci_cd,CI/CD,Data Engineering,CI/CD|continuous integration|continuous delivery|continuous deployment
+docker,Docker,Data Engineering,Docker
+kubernetes,Kubernetes,Data Engineering,Kubernetes
+terraform,Terraform,Data Engineering,Terraform
+matillion,Matillion,Data Engineering,Matillion
+snowflake,Snowflake,Data Platform,Snowflake
+bigquery,BigQuery,Data Platform,BigQuery|Google BigQuery
+redshift,Amazon Redshift,Data Platform,Redshift|Amazon Redshift
+postgresql,PostgreSQL,Database,PostgreSQL|Postgres
+mysql,MySQL,Database,MySQL
+sql_server,SQL Server,Database,SQL Server|Microsoft SQL Server|MSSQL
+oracle,Oracle,Database,Oracle Database
+aws,AWS,Cloud,AWS|Amazon Web Services
+azure,Microsoft Azure,Cloud,Azure|Microsoft Azure
+google_cloud,Google Cloud,Cloud,GCP|Google Cloud|Google Cloud Platform
+statistics,Statistics,Analytics Method,statistics|statistical analysis|statistical modeling|statistical modelling|hypothesis testing
+forecasting,Forecasting,Analytics Method,forecasting|time series|demand forecasting
+ab_testing,A/B Testing,Analytics Method,A/B testing|AB testing|A B testing|controlled experiment|controlled experiments
+machine_learning,Machine Learning,Analytics Method,machine learning|predictive modeling|predictive modelling
+data_governance,Data Governance,Data Management,data governance
+data_quality,Data Quality,Data Management,data quality|data validation|quality assurance
+git,Git,Developer Tool,Git|GitHub|GitLab
+jira,Jira,Developer Tool,Jira
+sas,SAS,Analytics Tool,SAS
+alteryx,Alteryx,Analytics Tool,Alteryx
+stakeholder_management,Stakeholder Management,Business Skill,stakeholder management|stakeholder engagement|stakeholder communication
+communication,Communication,Business Skill,communication skills|written communication|verbal communication|communicate findings
+problem_solving,Problem Solving,Business Skill,problem solving|problem-solving
+business_acumen,Business Acumen,Business Skill,business acumen|commercial acumen

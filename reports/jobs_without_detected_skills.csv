@@ -1,0 +1,5 @@
+﻿source_record_key,source,source_job_id,job_title_raw,company_name,role_family,publication_date,detected_skill_count,detected_skills
+himalayas::https://himalayas.app/companies/parsons-corporation/jobs/data-analyst,Himalayas,https://himalayas.app/companies/parsons-corporation/jobs/data-analyst,Data Analyst,Parsons Corporation,Data Analyst,1970-01-21T15:40:43Z,0,
+himalayas::https://himalayas.app/companies/crawford-company/jobs/statistical-claim-data-analyst,Himalayas,https://himalayas.app/companies/crawford-company/jobs/statistical-claim-data-analyst,Statistical & Claim Data Analyst,Crawford & Company,Data Analyst,1970-01-21T15:50:18Z,0,
+himalayas::https://himalayas.app/companies/cotiviti/jobs/sr-data-scientist,Himalayas,https://himalayas.app/companies/cotiviti/jobs/sr-data-scientist,Sr. Data Scientist,Cotiviti,Data Scientist,1970-01-21T15:49:24Z,0,
+himalayas::https://himalayas.app/companies/nagarro/jobs/senior-engineer-data-analytics,Himalayas,https://himalayas.app/companies/nagarro/jobs/senior-engineer-data-analytics,"Senior Engineer, Data Analytics",Nagarro,Other Analytics,1970-01-21T15:11:47Z,0,
