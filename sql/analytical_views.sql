@@ -1,3 +1,4 @@
+	DROP VIEW IF EXISTS vw_skill_demand;
 CREATE VIEW vw_skill_demand AS
 
 SELECT
@@ -22,7 +23,9 @@ GROUP BY
     s.skill_name,
     s.skill_category;
 	
-	CREATE VIEW vw_role_summary AS
+
+		DROP VIEW IF EXISTS vw_role_summary;
+CREATE VIEW vw_role_summary AS
 
 SELECT
     role_family,

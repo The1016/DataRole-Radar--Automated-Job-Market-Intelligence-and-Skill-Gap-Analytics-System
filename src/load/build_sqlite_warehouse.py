@@ -24,6 +24,11 @@ DATABASE_DIRECTORY = (
     / "database"
 )
 
+SQL_DIRECTORY = (
+    PROJECT_ROOT
+    / "sql"
+)
+
 JOBS_FILE = (
     PROCESSED_DIRECTORY
     / "master_target_roles.csv"
@@ -47,6 +52,11 @@ DATABASE_FILE = (
 TEMP_DATABASE_FILE = (
     DATABASE_DIRECTORY
     / "datarole_radar.tmp.db"
+)
+
+ANALYTICAL_VIEWS_FILE = (
+    SQL_DIRECTORY
+    / "analytical_views.sql"
 )
 
 
@@ -97,6 +107,15 @@ EXPECTED_JOB_SKILL_COLUMNS = [
     "matched_aliases",
     "evidence_field_count",
 ]
+
+EXPECTED_ANALYTICAL_VIEWS = {
+    "vw_skill_demand",
+    "vw_role_summary",
+    "vw_role_skill_demand",
+    "vw_skill_cooccurrence",
+    "vw_role_skill_cooccurrence",
+    "vw_salary_by_role",
+}
 
 
 def validate_schema(
@@ -510,6 +529,34 @@ def create_schema(
     )
 
 
+def create_analytical_views(
+    connection: sqlite3.Connection,
+) -> None:
+    """Create reporting views from the external SQL file."""
+
+    if not ANALYTICAL_VIEWS_FILE.exists():
+        raise FileNotFoundError(
+            "Analytical views SQL file not found: "
+            f"{ANALYTICAL_VIEWS_FILE}"
+        )
+
+    sql_script = (
+        ANALYTICAL_VIEWS_FILE
+        .read_text(
+            encoding="utf-8"
+        )
+    )
+
+    if not sql_script.strip():
+        raise ValueError(
+            "Analytical views SQL file is empty."
+        )
+
+    connection.executescript(
+        sql_script
+    )
+
+
 def insert_sources(
     connection: sqlite3.Connection,
     jobs: pd.DataFrame,
@@ -837,12 +884,15 @@ def validate_database(
         "jobs": connection.execute(
             "SELECT COUNT(*) FROM jobs"
         ).fetchone()[0],
+
         "skills": connection.execute(
             "SELECT COUNT(*) FROM skills"
         ).fetchone()[0],
+
         "job_skills": connection.execute(
             "SELECT COUNT(*) FROM job_skills"
         ).fetchone()[0],
+
         "sources": connection.execute(
             "SELECT COUNT(*) FROM sources"
         ).fetchone()[0],
@@ -890,9 +940,11 @@ def validate_database(
         """
         SELECT COUNT(*)
         FROM job_skills js
+
         LEFT JOIN jobs j
             ON js.source_record_key
              = j.source_record_key
+
         WHERE j.source_record_key IS NULL;
         """
     ).fetchone()[0]
@@ -901,21 +953,47 @@ def validate_database(
         """
         SELECT COUNT(*)
         FROM job_skills js
+
         LEFT JOIN skills s
             ON js.skill_key
              = s.skill_key
+
         WHERE s.skill_key IS NULL;
         """
     ).fetchone()[0]
 
     if orphan_jobs != 0:
         raise ValueError(
-            f"Found {orphan_jobs} orphan job relationships."
+            f"Found {orphan_jobs} "
+            "orphan job relationships."
         )
 
     if orphan_skills != 0:
         raise ValueError(
-            f"Found {orphan_skills} orphan skill relationships."
+            f"Found {orphan_skills} "
+            "orphan skill relationships."
+        )
+
+    actual_views = {
+        row[0]
+        for row in connection.execute(
+            """
+            SELECT name
+            FROM sqlite_master
+            WHERE type = 'view';
+            """
+        ).fetchall()
+    }
+
+    missing_views = (
+        EXPECTED_ANALYTICAL_VIEWS
+        - actual_views
+    )
+
+    if missing_views:
+        raise ValueError(
+            "Missing analytical views: "
+            f"{sorted(missing_views)}"
         )
 
 
@@ -940,25 +1018,41 @@ def print_report(
         "SELECT COUNT(*) FROM job_skills"
     ).fetchone()[0]
 
+    view_count = connection.execute(
+        """
+        SELECT COUNT(*)
+        FROM sqlite_master
+        WHERE type = 'view';
+        """
+    ).fetchone()[0]
+
     print()
     print("# SQLITE WAREHOUSE REPORT")
     print()
 
     print(
-        f"Sources loaded: {source_count}"
+        f"Sources loaded: "
+        f"{source_count}"
     )
 
     print(
-        f"Jobs loaded: {job_count}"
+        f"Jobs loaded: "
+        f"{job_count}"
     )
 
     print(
-        f"Skills loaded: {skill_count}"
+        f"Skills loaded: "
+        f"{skill_count}"
     )
 
     print(
         "Job-skill relationships loaded: "
         f"{relationship_count}"
+    )
+
+    print(
+        "Analytical views created: "
+        f"{view_count}"
     )
 
     print(
@@ -978,9 +1072,14 @@ def print_report(
         SELECT
             source,
             COUNT(*) AS job_count
+
         FROM jobs
-        GROUP BY source
-        ORDER BY job_count DESC;
+
+        GROUP BY
+            source
+
+        ORDER BY
+            job_count DESC;
         """
     ).fetchall()
 
@@ -998,15 +1097,21 @@ def print_report(
         SELECT
             s.skill_name,
             COUNT(*) AS job_count
+
         FROM job_skills js
+
         JOIN skills s
-            ON js.skill_key = s.skill_key
+            ON js.skill_key
+             = s.skill_key
+
         GROUP BY
             s.skill_key,
             s.skill_name
+
         ORDER BY
             job_count DESC,
             s.skill_name
+
         LIMIT 10;
         """
     ).fetchall()
@@ -1017,9 +1122,30 @@ def print_report(
         )
 
     print()
+    print("## ANALYTICAL VIEWS")
+    print()
+
+    view_rows = connection.execute(
+        """
+        SELECT name
+        FROM sqlite_master
+        WHERE type = 'view'
+        ORDER BY name;
+        """
+    ).fetchall()
+
+    for (view_name,) in view_rows:
+        print(
+            view_name
+        )
+
+    print()
     print("## DATABASE CREATED")
     print()
-    print(DATABASE_FILE)
+
+    print(
+        DATABASE_FILE
+    )
 
 
 def build_warehouse() -> None:
@@ -1052,30 +1178,44 @@ def build_warehouse() -> None:
             "PRAGMA foreign_keys = ON;"
         )
 
+        # 1. Create relational tables/indexes.
         create_schema(
             connection
         )
 
+        # 2. Create all analytical SQL views.
+        #
+        # Views only require the referenced tables
+        # to exist. The tables do not need rows yet.
+        create_analytical_views(
+            connection
+        )
+
+        # 3. Load source dimension.
         source_count = insert_sources(
             connection,
             jobs,
         )
 
+        # 4. Load target jobs.
         insert_jobs(
             connection,
             jobs,
         )
 
+        # 5. Load canonical skills.
         insert_skills(
             connection,
             skills,
         )
 
+        # 6. Load job-skill bridge.
         insert_job_skills(
             connection,
             job_skills,
         )
 
+        # 7. Record warehouse-build metadata.
         insert_pipeline_run(
             connection=connection,
             source_count=source_count,
@@ -1086,6 +1226,7 @@ def build_warehouse() -> None:
             ),
         )
 
+        # 8. Validate the completed warehouse.
         validate_database(
             connection=connection,
             expected_jobs=len(jobs),
@@ -1096,8 +1237,10 @@ def build_warehouse() -> None:
             expected_sources=source_count,
         )
 
+        # 9. Commit only after validation passes.
         connection.commit()
 
+        # 10. Print successful build report.
         print_report(
             connection
         )
@@ -1109,6 +1252,8 @@ def build_warehouse() -> None:
     finally:
         connection.close()
 
+    # Replace the production DB only after the
+    # temporary database has built successfully.
     os.replace(
         TEMP_DATABASE_FILE,
         DATABASE_FILE,

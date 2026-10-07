@@ -331,3 +331,222 @@ SELECT
 FROM job_coverage;
 
 
+WITH
+
+params AS (
+    SELECT
+        'BI Developer' AS target_role
+),
+
+candidate_skills(skill_key) AS (
+    VALUES
+        ('sql'),
+        ('power_bi'),
+		('excel')
+),
+
+target_jobs AS (
+    SELECT
+        j.source_record_key
+
+    FROM jobs AS j
+    CROSS JOIN params AS p
+
+    WHERE
+        j.role_family = p.target_role
+),
+
+missing_skills AS (
+    SELECT
+        rsd.skill_key,
+        rsd.skill_name,
+        rsd.skill_category,
+        rsd.skill_job_count,
+        rsd.role_skill_share_pct
+
+    FROM vw_role_skill_demand AS rsd
+    CROSS JOIN params AS p
+
+    LEFT JOIN candidate_skills AS cs
+        ON rsd.skill_key = cs.skill_key
+
+    WHERE
+        rsd.role_family = p.target_role
+        AND cs.skill_key IS NULL
+),
+
+job_baseline AS (
+    SELECT
+        tj.source_record_key,
+
+        COUNT(js.skill_key)
+            AS detected_skill_count,
+
+        SUM(
+            CASE
+                WHEN cs.skill_key IS NOT NULL
+                THEN 1
+                ELSE 0
+            END
+        ) AS matched_skill_count
+
+    FROM target_jobs AS tj
+
+    LEFT JOIN job_skills AS js
+        ON tj.source_record_key
+         = js.source_record_key
+
+    LEFT JOIN candidate_skills AS cs
+        ON js.skill_key
+         = cs.skill_key
+
+    GROUP BY
+        tj.source_record_key
+),
+
+hypothetical_profiles AS (
+    SELECT
+        ms.skill_key,
+        ms.skill_name,
+        ms.skill_category,
+        ms.skill_job_count,
+        ms.role_skill_share_pct,
+
+        jb.source_record_key,
+        jb.detected_skill_count,
+        jb.matched_skill_count,
+
+        CASE
+            WHEN new_skill.skill_key IS NOT NULL
+            THEN 1
+            ELSE 0
+        END AS added_match
+
+    FROM missing_skills AS ms
+
+    CROSS JOIN job_baseline AS jb
+
+    LEFT JOIN job_skills AS new_skill
+        ON new_skill.source_record_key
+         = jb.source_record_key
+       AND new_skill.skill_key
+         = ms.skill_key
+)
+
+SELECT
+    skill_key,
+    skill_name,
+    skill_category,
+
+    skill_job_count,
+
+    role_skill_share_pct
+        AS role_demand_pct,
+
+    ROUND(
+        AVG(
+            CASE
+                WHEN detected_skill_count > 0
+                THEN
+                    100.0
+                    * matched_skill_count
+                    / detected_skill_count
+            END
+        ),
+        2
+    ) AS baseline_avg_coverage_pct,
+
+    ROUND(
+        AVG(
+            CASE
+                WHEN detected_skill_count > 0
+                THEN
+                    100.0
+                    * (
+                        matched_skill_count
+                        + added_match
+                    )
+                    / detected_skill_count
+            END
+        ),
+        2
+    ) AS new_avg_coverage_pct,
+
+    ROUND(
+        AVG(
+            CASE
+                WHEN detected_skill_count > 0
+                THEN
+                    100.0
+                    * (
+                        matched_skill_count
+                        + added_match
+                    )
+                    / detected_skill_count
+            END
+        )
+        -
+        AVG(
+            CASE
+                WHEN detected_skill_count > 0
+                THEN
+                    100.0
+                    * matched_skill_count
+                    / detected_skill_count
+            END
+        ),
+        2
+    ) AS marginal_coverage_gain_pct_points,
+
+    SUM(
+        CASE
+            WHEN
+                detected_skill_count > 0
+
+                AND (
+                    100.0
+                    * matched_skill_count
+                    / detected_skill_count
+                ) < 50
+
+                AND (
+                    100.0
+                    * (
+                        matched_skill_count
+                        + added_match
+                    )
+                    / detected_skill_count
+                ) >= 50
+
+            THEN 1
+            ELSE 0
+        END
+    ) AS jobs_newly_reaching_50pct,
+
+    SUM(
+        CASE
+            WHEN
+                matched_skill_count < 3
+                AND (
+                    matched_skill_count
+                    + added_match
+                ) >= 3
+
+            THEN 1
+            ELSE 0
+        END
+    ) AS jobs_newly_reaching_3_matches
+
+FROM hypothetical_profiles
+
+GROUP BY
+    skill_key,
+    skill_name,
+    skill_category,
+    skill_job_count,
+    role_skill_share_pct
+
+ORDER BY
+    marginal_coverage_gain_pct_points DESC,
+    role_demand_pct DESC;
+

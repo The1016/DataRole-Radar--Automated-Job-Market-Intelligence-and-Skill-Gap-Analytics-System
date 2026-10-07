@@ -1,8 +1,39 @@
+# Python
 .venv/
+venv/
 __pycache__/
-*.pyc
-.env
-database/*.db
-data/raw/*.json
-data/raw/**/*.json
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
 
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Environment / secrets
+.env
+.env.*
+*.key
+*.pem
+
+# Raw and generated job-market data
+data/raw/
+data/processed/
+
+# SQLite warehouse
+data/database/
+*.db
+*.sqlite
+*.sqlite3
+
+# Power BI working file
+# Keep screenshots/documentation in GitHub instead.
+*.pbix
+
+# Temporary files
+*.tmp
+*.log
+~$*
